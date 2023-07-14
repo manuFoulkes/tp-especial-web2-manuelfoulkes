@@ -9,7 +9,9 @@ class ApiAlbumModel {
     }
 
     public function getAll($sort, $startIndex, $limit) {
-        $query = $this->db->prepare("SELECT * FROM album ORDER BY " . $sort . " LIMIT ?, ?");
+        $orderBy = ($sort === 'valoracion') ? 'v.valoracion' : 'a. ' . $sort;
+
+        $query = $this->db->prepare("SELECT a.*, v.valoracion FROM album a LEFT JOIN valoracion v ON a.id = v.id_album ORDER BY " . $orderBy . " LIMIT ?, ?");
         $query->execute([$startIndex, $limit]);
         return  $query->fetchAll(PDO::FETCH_OBJ);
     }

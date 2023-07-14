@@ -33,7 +33,7 @@ class ApiAlbumController {
         $limit = 5;
 
         if(isset($_GET['sort'])) {
-            $validColumns = ['nombre', 'genero', 'id_artista'];
+            $validColumns = ['nombre', 'genero', 'id_artista', 'valoracion'];
 
             if(in_array($_GET['sort'], $validColumns)) {
                 $sort = $_GET['sort'];
