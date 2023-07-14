@@ -11,13 +11,24 @@ class ApiAlbumModel {
     public function getAll($sort, $startIndex, $limit) {
         $orderBy = ($sort === 'valoracion') ? 'v.valoracion' : 'a. ' . $sort;
 
-        $query = $this->db->prepare("SELECT a.*, v.valoracion FROM album a LEFT JOIN valoracion v ON a.id = v.id_album ORDER BY " . $orderBy . " LIMIT ?, ?");
+        $stmt = "SELECT a.*, v.valoracion 
+                FROM album a 
+                LEFT JOIN valoracion v ON a.id = v.id_album 
+                ORDER BY " . $orderBy . " LIMIT ?, ?";
+
+        $query = $this->db->prepare($stmt);
         $query->execute([$startIndex, $limit]);
         return  $query->fetchAll(PDO::FETCH_OBJ);
     }
 
     public function getById($id) {
-        $query = $this->db->prepare('SELECT a.*, AVG(v.valoracion) AS valoracion_promedio FROM album a LEFT JOIN valoracion v ON a.id = v.id_album WHERE a.id = ?');
+        $stmt = 'SELECT a.*, AVG(v.valoracion) 
+                AS valoracion_promedio 
+                FROM album a 
+                LEFT JOIN valoracion v ON a.id = v.id_album 
+                WHERE a.id = ?';
+
+        $query = $this->db->prepare($stmt);
         $query->execute([$id]);
         return $query->fetch(PDO::FETCH_OBJ);
     }

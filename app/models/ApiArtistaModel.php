@@ -13,4 +13,18 @@ class ApiArtistaModel {
         $query->execute([$id]);
         return $query->fetch(PDO::FETCH_OBJ);
     }
+
+    public function getAll($sort, $startIndex, $limit) {
+        $orderBy = ($sort === 'cantidad_albunes') ? 'al.id' : 'a. ' . $sort;
+        
+        $stmt = 'SELECT a.*, al.id 
+                FROM artista a 
+                LEFT JOIN album al ON a.id = al.id_artista 
+                ORDER BY ' . $orderBy . ' LIMIT ?, ?';
+
+        $query = $this->db->prepare($stmt);
+        $query->execute([$startIndex, $limit]);
+
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
 }

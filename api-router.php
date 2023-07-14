@@ -21,5 +21,8 @@ $router->addRoute('api/album/:ID','PUT','ApiAlbumController','editAlbum');
 //Valorar un album
 $route->addRoute('api/album/:ID/valoracion','POST','ApiValoracionController','valorarAlbum');
 
+// Listar artistas por nombre, cantidad de albunes
+$router->addRoute('api/artistas','GET','ApiArtistaController','getArtistas');
+
 
 $router->route($_GET["resource"], $_SERVER['REQUEST_METHOD']);
