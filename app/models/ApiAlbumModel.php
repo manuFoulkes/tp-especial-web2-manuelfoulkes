@@ -25,7 +25,12 @@ class ApiAlbumModel {
     public function addAlbum($nombre, $genero, $id_artista) {
         $query = $this->db->prepare('INSERT INTO album (nombre, genero, id_artista) VALUES (?,?,?)');
         $query->execute([$nombre, $genero, $id_artista]);
-        
+
         return $this->db->lastInsertId();
+    }
+
+    public function update($nombre, $genero, $id_artista, $id_album) {
+        $query = $this->db->prepare('UPDATE album SET nombre = ?, genero = ?, id_artista = ? WHERE id = ?');
+        $query->execute([$nombre, $genero, $id_artista, $id_album]);
     }
 }

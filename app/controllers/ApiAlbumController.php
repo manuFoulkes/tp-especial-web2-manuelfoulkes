@@ -133,4 +133,55 @@ class ApiAlbumController {
 
         $this->view->response('Album insertado con exito', 201);
     }
+
+    public function editAlbum($params = null) {
+        if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params[':ID'] <= 0) {
+            $this->view->response('Error: Parametro ID invalido', 400);
+            return;
+        }
+
+        $album = $this->albumModel->getById($params[':ID']);
+
+        if(empty($album)) {
+            $this->view->response('Error: No existe ningun album con el ID proporcionado', 404);
+            return;
+        }
+
+        $id_album = $params[':ID'];
+
+        $albumData = $this->getAlbumData();
+
+        $camposRequeridos = [
+            'nombre' => 'string',
+            'genero' => 'string',
+            'id_artista' => 'integer'
+        ];
+
+        foreach($camposRequeridos as $campo => $tipo) {
+            if(!isset($albumData->$campo) || $albumData->$campo === '') {
+                $this->view->response('Error: Falta el campo requerido: ' . $campo, 400);
+                return;
+            }
+
+            if(gettype($albumData->$campo) !== $tipo) {
+                $this->view->response('Error: El campo ' . $campo . ' debe ser del tipo ' . $tipo, 400);
+                return;
+            }
+        }
+
+        $artista = $this->artistaModel->getArtistaById($albumData->id_artista);
+
+        if(empty($artista)) {
+            $this->view->response('Error: No se encontro ningun artista con id proporcionado', 404);
+            return;
+        }
+
+        $nombre = $albumData->nombre;
+        $genero = $albumData->genero;
+        $id_artista = $albumData->id_artista;
+
+        $this->albumModel->update($nombre, $genero, $id_artista, $id_album);
+
+        $this->view->response('Album editado con exito', 201);
+    }
 }
