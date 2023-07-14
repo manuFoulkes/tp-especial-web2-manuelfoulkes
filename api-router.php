@@ -18,5 +18,8 @@ $router->addRoute('api/album','POST','ApiAlbumController','addAlbum');
 // Editar un album
 $router->addRoute('api/album/:ID','PUT','ApiAlbumController','editAlbum');
 
+//Valorar un album
+$route->addRoute('api/album/:ID/valoracion','POST','ApiValoracionController','valorarAlbum');
+
 
 $router->route($_GET["resource"], $_SERVER['REQUEST_METHOD']);

@@ -24,4 +24,39 @@ class ApiValoracionController {
     public function getValoracionData() {
         return json_decode($this->valoracionData);
     }
+
+    // TODO: Agregar Auth
+    public function valorarAlbum($params = null) {
+        if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params[':ID'] <= 0) {
+            $this->view->response('Error: Parametro ID invalido', 400);
+            return;
+        }
+
+        $album = $this->albumModel->getById($params[':ID']);
+
+        if(empty($album)) {
+            $this->view->response('El Album con el id ' . $params[':ID'] . ' no eciste', 404);
+            return;
+        }
+
+        $valoracionData = $this->getValoracionData();
+
+        if(!isset($valoracionData->valoracion) || !is_numeric($valoracionData->valoracion) || $valoracionData->valoracion < 0 || $valoracionData->valoracion > 5) {
+            $this->view->response('Error: Campo valoracion invalido', 400);
+            return;
+        }
+
+        $id_album = $params[':ID'];
+        $id_usuario = $_SESSION['USER_ID'];
+        $valoracion = $valoracionData->valoracion;
+
+        $idUltimaValoracion = $this->valoracionModel->addValoracion($id_album, $id_usuario, $valoracion);
+        
+        if(empty($idUltimaValoracion)) {
+            $this->view->response('Error: No se pudo agregar la valoracion', 500);
+            return;
+        }
+
+        $this->view->response('Valoracion agregada con exito', 201);
+    }
 }
