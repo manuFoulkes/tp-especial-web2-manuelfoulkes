@@ -90,4 +90,47 @@ class ApiAlbumController {
 
         $this->view->response($album, 200);
     }
+
+    //-ALBUM (id, nombre, genero, id_artista)
+    public function addAlbum($params = null) {
+        $albumData = $this->getAlbumData();
+
+        $camposRequeridos = [
+            'nombre' => 'string',
+            'genero' => 'string',
+            'id_artista' => 'integer'
+        ];
+
+        foreach($camposRequeridos as $campo => $tipo) {
+            if(!isset($albumData->$campo) || $albumData->$campo === '') {
+                $this->view->response('Error: Falta el campo requerido: ' . $campo, 400);
+                return;
+            }
+
+            if(gettype($albumData->$campo) !== $tipo) {
+                $this->view->response('Error: El campo ' . $campo . ' debe ser del tipo ' . $tipo, 400);
+                return;
+            }
+        }
+
+        $artista = $this->artistaModel->getArtistaById($albumData->id_artista);
+
+        if(empty($artista)) {
+            $this->view->response('Error: No se encontro ningun artista con id proporcionado', 404);
+            return;
+        }
+
+        $nombre = $albumData->nombre;
+        $genero = $albumData->genero;
+        $id_artista = $albumData->id_artista;
+
+        $idUltimoAlbumInsertado = $this->albumModel->addAlbum($nombre, $genero, $id_artista);
+
+        if(empty($idUltimoAlbumInsertado)) {
+            $this->view->response('Error: No se pudo insertar el album', 500);
+            return;
+        }
+
+        $this->view->response('Album insertado con exito', 201);
+    }
 }

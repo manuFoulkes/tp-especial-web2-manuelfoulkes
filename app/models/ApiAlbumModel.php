@@ -21,4 +21,11 @@ class ApiAlbumModel {
         $query->execute([$id]);
         return $query->fetch(PDO::FETCH_OBJ);
     }
+
+    public function addAlbum($nombre, $genero, $id_artista) {
+        $query = $this->db->prepare('INSERT INTO album (nombre, genero, id_artista) VALUES (?,?,?)');
+        $query->execute([$nombre, $genero, $id_artista]);
+        
+        return $this->db->lastInsertId();
+    }
 }
