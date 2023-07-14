@@ -72,4 +72,22 @@ class ApiAlbumController {
 
         $this->view->response($albunes, 200);
     }
+
+    public function getAlbumById($params = null) {
+        if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params[':ID'] <= 0) {
+            $this->view->response('Error: Verificar el parametro ID', 400);
+            return;
+        }
+
+        $album = $this->albumModel->getById($params[':ID']);
+
+        if(empty($album)) {
+            $this->view->response('No se encontro ningun album con el ID suministrado', 404);
+            return;
+        }
+
+        $album->valoracion_promedio = (float) $album->valoracion_promedio;
+
+        $this->view->response($album, 200);
+    }
 }
