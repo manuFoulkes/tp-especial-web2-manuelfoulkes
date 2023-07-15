@@ -25,4 +25,9 @@ class ApiValoracionModel {
         $query = $this->db->prepare('UPDATE valoracion SET valoracion = ? WHERE id = ?');
         $query->execute([$valoracion, $id]);
     }
+
+    public function deleteValoracion($id) {
+        $query = $this->db->prepare('DELETE FROM valoracion WHERE id = ?');
+        $query->execute([$id]);
+    }
 }

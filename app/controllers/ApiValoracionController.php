@@ -87,4 +87,24 @@ class ApiValoracionController {
 
         $this->view->response("Valoracion actualizada con exito", 201);
     }
+
+    public function deleteValoracion($params = null) {
+        if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params[':ID'] <= 0) {
+            $this->view->response('Error: Parametro ID invalido', 400);
+            return;
+        }
+
+        $valoracion = $this->valoracionModel->getValoracionById($params[':ID']);
+
+        if(empty($valoracion)) {
+            $this->view->response('Error: No se encontro ninguna valoracion con el ID proporcionado', 404);
+            return;
+        }
+
+        $idValoracion = $params[':ID'];
+
+        $this->valoracionModel->deleteValoracion($idValoracion);
+
+        $this->view->response('Valoracion eliminada con exito', 201);
+    }
 }
