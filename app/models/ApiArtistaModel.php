@@ -27,4 +27,16 @@ class ApiArtistaModel {
 
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
+
+    public function getArtistaByName($nombre) {
+        $query = $this->db->prepare('SELECT * FROM artista WHERE nombre = ?');
+        $query->execute([$nombre]);
+        return $query->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function addArtista($nombre, $genero) {
+        $query = $this->db->prepare('INSERT INTO artista (nombre, genero) VALUES (?,?)');
+        $query->execute([$nombre, $genero]);
+        return $this->db->lastInsertId();
+    }
 }

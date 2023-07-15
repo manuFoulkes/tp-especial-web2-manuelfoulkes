@@ -70,4 +70,44 @@ class ApiArtistaController {
 
         $this->view->response($artistas, 200);
     }
+
+    public function addArtista($params = null) {
+        $artistaData = $this->getArtistaData();
+
+        $camposRequeridos = [
+            'nombre' => 'string',
+            'genero' => 'string'
+        ];
+
+        foreach($camposRequeridos as $campo => $tipo) {
+            if(!isset($artistaData->$campo) || $artistaData->$campo === '') {
+                $this->view->response('Error: Falta el campo requerido: ' . $campo, 400);
+                return;
+            }
+
+            if(gettype($artistaData->$campo) !== $tipo) {
+                $this->view->response('Error: El campo ' . $campo . ' debe ser del tipo ' . $tipo, 400);
+                return;
+            }
+        }
+
+        $artista = $this->artistaModel->getArtistaByName($artistaData->nombre);
+
+        if($artista) {
+            $this->view->response('Error: El artista ingresado ya existe', 400);
+            return;
+        }
+
+        $nombre = $artistaData->nombre;
+        $genero = $artistaData->genero;
+
+        $idUltimoArtistaIngresado = $this->artistaModel->addArtista($nombre, $genero);
+
+        if(empty($idUltimoArtistaIngresado)) {
+            $this->view->response('Error: No se pudo agregar el artista', 500);
+            return;
+        }
+
+        $this->view->response('Artista ingresado con exito', 201);
+    }
 }
