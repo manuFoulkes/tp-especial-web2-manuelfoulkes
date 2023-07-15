@@ -14,4 +14,15 @@ class ApiValoracionModel {
 
         return $this->db->lastInsertId();
     }
+
+    public function getValoracionById($id) {
+        $query = $this->db->prepare('SELECT * FROM valoracion WHERE id = ?');
+        $query->execute([$id]);
+        return $query->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function updateValoracion($valoracion, $id) {
+        $query = $this->db->prepare('UPDATE valoracion SET valoracion = ? WHERE id = ?');
+        $query->execute([$valoracion, $id]);
+    }
 }

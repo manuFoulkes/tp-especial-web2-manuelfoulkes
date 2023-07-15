@@ -59,4 +59,32 @@ class ApiValoracionController {
 
         $this->view->response('Valoracion agregada con exito', 201);
     }
+
+    public function updateValoracion($params = null) {
+        if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params[':ID'] <= 0) {
+            $this->view->response('Error: Parametro ID invalido', 400);
+            return;
+        }
+
+        $valoracion = $this->valoracionModel->getValoracionById($params[':ID']);
+
+        if(empty($valoracion)) {
+            $this->view->response('Error: No existe una valoracion con el ID proporcionado', 404);
+            return;
+        }
+
+        $valoracionData = $this->getValoracionData();
+
+        if(!isset($valoracionData->valoracion) || !is_numeric($valoracionData->valoracion) || $valoracionData->valoracion < 0 || $valoracionData->valoracion > 5) {
+            $this->view->response('Error: El campo valoracion no es valido', 400);
+            return;
+        }
+
+        $idValoracion = $params[':ID'];
+        $valoracion = $valoracionData->valoracion;
+
+        $this->valoracionModel->updateValoracion($valoracion, $idValoracion);
+
+        $this->view->response("Valoracion actualizada con exito", 201);
+    }
 }

@@ -30,5 +30,8 @@ $router->addRoute('api/artista','POST','ApiArtistaController','addArtista');
 // - Editar un artista
 $router->addRoute('api/artista/:ID','PUT','ApiArtistaController','updateArtista');
 
+// - Editar una valoracion
+$router->addRoute('valoracion/:ID','PUT','ApiValoracionController','updateValoracion');
+
 
 $router->route($_GET["resource"], $_SERVER['REQUEST_METHOD']);
