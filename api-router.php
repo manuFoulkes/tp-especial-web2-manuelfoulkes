@@ -27,5 +27,8 @@ $router->addRoute('api/artistas','GET','ApiArtistaController','getArtistas');
 // Agregar un artista
 $router->addRoute('api/artista','POST','ApiArtistaController','addArtista');
 
+// - Editar un artista
+$router->addRoute('api/artista/:ID','PUT','ApiArtistaController','updateArtista');
+
 
 $router->route($_GET["resource"], $_SERVER['REQUEST_METHOD']);

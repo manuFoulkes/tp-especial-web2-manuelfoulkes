@@ -110,4 +110,45 @@ class ApiArtistaController {
 
         $this->view->response('Artista ingresado con exito', 201);
     }
+
+    public function updateArtista($params = null) {
+        if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params[':ID'] <= 0) {
+            $this->view->response('Error: El parametro ID no es valido', 404);
+            return;
+        }
+
+        $artista = $this->artistaModel->getArtistaById($params[':ID']);
+
+        if(empty($artista)) {
+            $this->view->response('Error: No existe ningun artista con el ID proporcionado', 404);
+            return;
+        }
+
+        $artistaData = $this->getArtistaData();
+
+        $camposRequeridos = [
+            'nombre' => 'string',
+            'genero' => 'string'
+        ];
+
+        foreach($camposRequeridos as $campo => $tipo) {
+            if(!isset($artistaData->$campo) || $artistaData->$campo === '') {
+                $this->view->response('Error: Falta el campo requerido: ' . $campo, 400);
+                return;
+            }
+
+            if(gettype($artistaData->$campo) !== $tipo) {
+                $this->view->response('Error: El campo ' . $campo . ' debe ser del tipo ' . $tipo, 400);
+                return;
+            }
+        }
+
+        $idArtista = $params[':ID'];
+        $nombre = $artistaData->nombre;
+        $genero = $artistaData->genero;
+
+        $this->artistaModel->updateArtista($nombre, $genero, $idArtista);
+
+        $this->view->response("Artista modificado con exito", 201);
+    }
 }

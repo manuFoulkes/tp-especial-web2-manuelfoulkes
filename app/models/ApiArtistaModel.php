@@ -39,4 +39,9 @@ class ApiArtistaModel {
         $query->execute([$nombre, $genero]);
         return $this->db->lastInsertId();
     }
+
+    public function updateArtista($nombre, $genero, $id_artista) {
+        $query = $this->db->prepare('UPDATE artista SET nombre = ?, genero = ? WHERE id = ?');
+        $query->execute([$nombre, $genero, $id_artista]);
+    }
 }
