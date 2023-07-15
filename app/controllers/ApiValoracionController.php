@@ -32,7 +32,7 @@ class ApiValoracionController {
             return;
         }
 
-        $album = $this->albumModel->getById($params[':ID']);
+        $album = $this->albumModel->getAlbumById($params[':ID']);
 
         if(empty($album)) {
             $this->view->response('El Album con el id ' . $params[':ID'] . ' no eciste', 404);

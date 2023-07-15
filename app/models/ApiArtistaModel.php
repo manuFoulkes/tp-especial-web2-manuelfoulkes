@@ -44,4 +44,9 @@ class ApiArtistaModel {
         $query = $this->db->prepare('UPDATE artista SET nombre = ?, genero = ? WHERE id = ?');
         $query->execute([$nombre, $genero, $id_artista]);
     }
+
+    public function deleteArtista($id) {
+        $query = $this->db->prepare('DELETE FROM artista WHERE id = ?');
+        $query->execute([$id]);
+    }
 }

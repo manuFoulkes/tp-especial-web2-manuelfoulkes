@@ -151,4 +151,31 @@ class ApiArtistaController {
 
         $this->view->response("Artista modificado con exito", 201);
     }
+
+    public function deleteArtista($params = null) {
+        if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params[':ID'] <= 0) {
+            $this->view->response('Error: Parametro ID invalido', 400);
+            return;
+        }
+
+        $artista = $this->artistaModel->getArtistaById($params[':ID']);
+
+        if(empty($artista)) {
+            $this->view->response('Error: No se encontro ningun artista con el ID proporcionado', 404);
+            return;
+        }
+
+        $idArtista = $params[':ID'];
+
+        $albunesAsociados = $this->albumModel->getAlbunesByArtista($idArtista);
+
+        if($albunesAsociados) {
+            $this->view->response('Error: El artista tiene albunes asociados, no se puede eliminar', 400);
+            return;
+        }
+
+        $this->artistaModel->deleteArtista($idArtista);
+
+        $this->view->response('Artista eliminado con exito', 200);
+    }
 }

@@ -49,4 +49,10 @@ class ApiAlbumModel {
         $query = $this->db->prepare('DELETE FROM album WHERE id = ?');
         $query->execute([$id]);
     }
+
+    public function getAlbunesByArtista($id_artista) {
+        $query = $this->db->prepare('SELECT * FROM album WHERE id_artista = ?');
+        $query->execute([$id_artista]);
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
 }

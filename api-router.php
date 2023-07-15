@@ -39,5 +39,8 @@ $router->addRoute('valoracion/:ID','DELETE','ApiValoracionController','deleteVal
 // Eliminar un album
 $router->addRoute('album/:ID','DELETE','ApiAlbumController','deleteAlbum');
 
+// Eliminar un artista
+$router->addRoute('artista/:ID','DELETE','ApiArtistaController','deleteArtista');
+
 
 $router->route($_GET["resource"], $_SERVER['REQUEST_METHOD']);
