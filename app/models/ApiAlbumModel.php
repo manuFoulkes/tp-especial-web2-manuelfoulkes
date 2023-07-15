@@ -21,7 +21,7 @@ class ApiAlbumModel {
         return  $query->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function getById($id) {
+    public function getAlbumById($id) {
         $stmt = 'SELECT a.*, AVG(v.valoracion) 
                 AS valoracion_promedio 
                 FROM album a 
@@ -43,5 +43,10 @@ class ApiAlbumModel {
     public function update($nombre, $genero, $id_artista, $id_album) {
         $query = $this->db->prepare('UPDATE album SET nombre = ?, genero = ?, id_artista = ? WHERE id = ?');
         $query->execute([$nombre, $genero, $id_artista, $id_album]);
+    }
+
+    public function deleteAlbum($id) {
+        $query = $this->db->prepare('DELETE FROM album WHERE id = ?');
+        $query->execute([$id]);
     }
 }

@@ -79,7 +79,7 @@ class ApiAlbumController {
             return;
         }
 
-        $album = $this->albumModel->getById($params[':ID']);
+        $album = $this->albumModel->getAlbumById($params[':ID']);
 
         if(empty($album)) {
             $this->view->response('No se encontro ningun album con el ID suministrado', 404);
@@ -140,7 +140,7 @@ class ApiAlbumController {
             return;
         }
 
-        $album = $this->albumModel->getById($params[':ID']);
+        $album = $this->albumModel->getAlbumById($params[':ID']);
 
         if(empty($album)) {
             $this->view->response('Error: No existe ningun album con el ID proporcionado', 404);
@@ -183,5 +183,23 @@ class ApiAlbumController {
         $this->albumModel->update($nombre, $genero, $id_artista, $id_album);
 
         $this->view->response('Album editado con exito', 201);
+    }
+
+    public function deleteAlbum($params = null) {
+        if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params['ID'] <= 0) {
+            $this->view->response('Erros: Parametro ID invalido', 400);
+            return;
+        }
+
+        $album = $this->albumModel->getAlbumById($params[':ID']);
+
+        if(empty($album)) {
+            $this->view->response('Error: No se encontro ningun album con el ID proporcionado', 404);
+            return;
+        }
+
+        $this->albumModel->deleteAlbum($params[':ID']);
+
+        $this->view->response('Album eliminado con exito', 200);
     }
 }
