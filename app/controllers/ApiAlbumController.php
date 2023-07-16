@@ -61,7 +61,8 @@ class ApiAlbumController {
             }
         }
 
-        $startIndex = ($page - 1) * $limit;
+        //$startIndex = ($page - 1) * $limit;
+        $startIndex = 1;
         
         $albunes = $this->albumModel->getAll($sort, $startIndex, $limit);
 
@@ -81,7 +82,7 @@ class ApiAlbumController {
 
         $album = $this->albumModel->getAlbumById($params[':ID']);
 
-        if(empty($album)) {
+        if(!$album) {
             $this->view->response('No se encontro ningun album con el ID suministrado', 404);
             return;
         }
