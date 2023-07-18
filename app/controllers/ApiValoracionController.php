@@ -2,21 +2,21 @@
 
 require_once 'app/models/ApiValoracionModel.php';
 require_once 'app/models/ApiAlbumModel.php';
-require_once 'app/models/ApiArtistaModel.php';
+require_once 'app/models/ApiUsuarioModel.php';
 require_once 'app/views/ApiView.php';
 
 class ApiValoracionController {
 
     private $valoracionModel;
     private $albumModel;
-    private $artistaModel;
+    private $usuarioModel;
     private $view;
     private $valoracionData;
 
     public function __construct() {
         $this->valoracionModel = new ApiValoracionModel();
         $this->albumModel = new ApiAlbumModel();
-        $this->artistaModel = new ApiArtistaModel();
+        $this->usuarioModel = new ApiUsuarioModel();
         $this->view = new ApiView();
         $this->valoracionData = file_get_contents('php://input');
     }
@@ -25,7 +25,6 @@ class ApiValoracionController {
         return json_decode($this->valoracionData);
     }
 
-    // TODO: Agregar Auth
     public function valorarAlbum($params = null) {
         if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params[':ID'] <= 0) {
             $this->view->response('Error: Parametro ID invalido', 400);
@@ -34,8 +33,8 @@ class ApiValoracionController {
 
         $album = $this->albumModel->getAlbumById($params[':ID']);
 
-        if(empty($album)) {
-            $this->view->response('El Album con el id ' . $params[':ID'] . ' no eciste', 404);
+        if($album->id === null) {
+            $this->view->response('El Album con el id ' . $params[':ID'] . ' no existe', 404);
             return;
         }
 
@@ -47,10 +46,10 @@ class ApiValoracionController {
         }
 
         $id_album = $params[':ID'];
-        $id_usuario = $_SESSION['USER_ID'];
+        $id_usuario = $this->usuarioModel->getUserId();
         $valoracion = $valoracionData->valoracion;
 
-        $idUltimaValoracion = $this->valoracionModel->addValoracion($id_album, $id_usuario, $valoracion);
+        $idUltimaValoracion = $this->valoracionModel->addValoracion($valoracion, $id_album, $id_usuario);
         
         if(empty($idUltimaValoracion)) {
             $this->view->response('Error: No se pudo agregar la valoracion', 500);
@@ -106,5 +105,63 @@ class ApiValoracionController {
         $this->valoracionModel->deleteValoracion($idValoracion);
 
         $this->view->response('Valoracion eliminada con exito', 201);
+    }
+
+    public function getValoracionPromedio($params = null) {
+        if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params[':ID'] <= 0) {
+            $this->view->response('Error: Parametro ID invalido', 400);
+            return;
+        }
+
+        $album = $this->albumModel->getAlbumById($params[':ID']);
+
+        if($album->id === null) {
+            $this->view->response('Error: No se encontro el album', 404);
+            return;
+        }
+
+        $valoracionPromedio = $this->valoracionModel->getPromedioByAlbum($album->id);
+
+        if($valoracionPromedio->valoracion_promedio === null) {
+            $this->view->response('El album no tiene valoraciones', 404);
+            return;
+        }
+
+        $this->view->response($valoracionPromedio, 200);
+    }
+
+    public function getValoracionesAlbum($params = null) {
+        if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params[':ID'] <= 0) {
+            $this->view->response('Error: Parametro ID invalido', 400);
+            return;
+        }
+
+        $album = $this->albumModel->getAlbumById($params[':ID']);
+
+        if($album->id === null) {
+            $this->view->response('Error: No se encontro el album', 404);
+            return;
+        }
+
+        $valoraciones = $this->valoracionModel->getValoracionesAlbum($album->id);
+
+        if(empty($valoraciones)) {
+            $this->view->response("El album no tiene valoraciones", 404);
+            return;
+        }
+
+        $this->view->response($valoraciones, 200);
+    }
+
+    public function generarValoraciones($params = null) {
+        $id_usuario = 2;
+        $ultimaInsersion = $this->valoracionModel->cargarRandom($id_usuario);
+
+        if(!$ultimaInsersion) {
+            $this->view->response('No se pudo realizar la insersion masiva', 500);
+            return;
+        }
+
+        $this->view->response('Insersion masiva de valoraciones realizada con exito', 200);
     }
 }

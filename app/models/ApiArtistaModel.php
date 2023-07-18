@@ -5,7 +5,7 @@ class ApiArtistaModel {
     private $db;
 
     public function __construct() {
-        $this->db = new PDO('mysql:host=localhost;db_name=coleccion_albunes;charset=utf8','root','');
+        $this->db = new PDO('mysql:host=localhost;dbname=coleccion_albunes;charset=utf8','root','');
     }
 
     public function getArtistaById($id) {
@@ -14,16 +14,16 @@ class ApiArtistaModel {
         return $query->fetch(PDO::FETCH_OBJ);
     }
 
-    public function getAll($sort, $startIndex, $limit) {
-        $orderBy = ($sort === 'cantidad_albunes') ? 'al.id' : 'a. ' . $sort;
-        
-        $stmt = 'SELECT a.*, al.id 
-                FROM artista a 
-                LEFT JOIN album al ON a.id = al.id_artista 
-                ORDER BY ' . $orderBy . ' LIMIT ?, ?';
+    public function getAll($sort, $startIndex, $limit) {        
+        $stmt = 'SELECT *
+                FROM artista
+                ORDER BY ' . $sort . ' ASC
+                LIMIT :startIndex, :limit';
 
         $query = $this->db->prepare($stmt);
-        $query->execute([$startIndex, $limit]);
+        $query->bindParam(':startIndex', $startIndex, PDO::PARAM_INT);
+        $query->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $query->execute();
 
         return $query->fetchAll(PDO::FETCH_OBJ);
     }

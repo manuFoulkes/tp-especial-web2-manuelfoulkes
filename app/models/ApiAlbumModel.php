@@ -9,12 +9,11 @@ class ApiAlbumModel {
     }
 
     public function getAll($sort, $startIndex, $limit) {
-        $orderBy = ($sort === 'valoracion') ? 'v.valoracion' : 'a.' . $sort;
     
-        $stmt = "SELECT a.*, v.valoracion 
+        $stmt = "SELECT a.*, artista.nombre AS nombre_artista
                 FROM album a 
-                LEFT JOIN valoracion v ON a.id = v.id_album 
-                ORDER BY " . $orderBy . " LIMIT :startIndex, :limit";
+                LEFT JOIN artista ON a.id_artista = artista.id
+                ORDER BY " . $sort . " LIMIT :startIndex, :limit";
     
         $query = $this->db->prepare($stmt);
         $query->bindParam(':startIndex', $startIndex, PDO::PARAM_INT);
@@ -23,20 +22,7 @@ class ApiAlbumModel {
     
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
-
-   /*public function getAll($sort, $startIndex, $limit) {
-        $orderBy = ($sort === 'valoracion') ? 'v.valoracion' : 'a. ' . $sort;
-
-        $stmt = "SELECT a.*, v.valoracion 
-                FROM album a 
-                LEFT JOIN valoracion v ON a.id = v.id_album 
-                ORDER BY " . $orderBy . " LIMIT ?, ?";
-
-        $query = $this->db->prepare($stmt);
-        
-        $query->execute([intval($startIndex), intval($limit)]);
-        return  $query->fetchAll(PDO::FETCH_OBJ);
-    }*/
+    
 
     public function getAlbumById($id) {
         $stmt = 'SELECT a.*, AVG(v.valoracion) 
@@ -47,7 +33,9 @@ class ApiAlbumModel {
 
         $query = $this->db->prepare($stmt);
         $query->execute([$id]);
-        return $query->fetch(PDO::FETCH_OBJ);
+        $album = $query->fetch(PDO::FETCH_OBJ);
+
+        return $album !== false ? $album : false;
     }
 
     public function addAlbum($nombre, $genero, $id_artista) {

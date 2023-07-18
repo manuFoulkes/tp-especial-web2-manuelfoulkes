@@ -21,8 +21,6 @@ class ApiAlbumController {
         $this->albumData = file_get_contents('php://input');
     }
 
-    //-ALBUM (id, nombre, genero, fecha_lanzamiento, id_artista)
-
     public function getAlbumData( ) {
         return json_decode($this->albumData);
     }
@@ -33,7 +31,7 @@ class ApiAlbumController {
         $limit = 5;
 
         if(isset($_GET['sort'])) {
-            $validColumns = ['nombre', 'genero', 'id_artista', 'valoracion'];
+            $validColumns = ['nombre', 'genero', 'id_artista'];
 
             if(in_array($_GET['sort'], $validColumns)) {
                 $sort = $_GET['sort'];
@@ -61,14 +59,17 @@ class ApiAlbumController {
             }
         }
 
-        //$startIndex = ($page - 1) * $limit;
-        $startIndex = 1;
+        $startIndex = ($page - 1) * $limit;
         
         $albunes = $this->albumModel->getAll($sort, $startIndex, $limit);
 
         if(empty($albunes)) {
             $this->view->response('No se encontro ningun album', 404);
             return;
+        }
+
+        foreach($albunes as $album) {
+            $album->valoracion_promedio = $this->valoracionModel->getPromedioByAlbum($album->id)->valoracion_promedio;
         }
 
         $this->view->response($albunes, 200);
@@ -82,8 +83,8 @@ class ApiAlbumController {
 
         $album = $this->albumModel->getAlbumById($params[':ID']);
 
-        if(!$album) {
-            $this->view->response('No se encontro ningun album con el ID suministrado', 404);
+        if(is_null($album->id)) {
+            $this->view->response('El Album con el id ' . $params[':ID'] . ' no existe', 404);
             return;
         }
 
@@ -92,7 +93,7 @@ class ApiAlbumController {
         $this->view->response($album, 200);
     }
 
-    //-ALBUM (id, nombre, genero, id_artista)
+   
     public function addAlbum($params = null) {
         $albumData = $this->getAlbumData();
 
@@ -187,8 +188,8 @@ class ApiAlbumController {
     }
 
     public function deleteAlbum($params = null) {
-        if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params['ID'] <= 0) {
-            $this->view->response('Erros: Parametro ID invalido', 400);
+        if(!isset($params[':ID']) || !is_numeric($params[':ID']) || $params[':ID'] <= 0) {
+            $this->view->response('Error: Parametro ID invalido', 400);
             return;
         }
 
