@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-07-2023 a las 16:34:29
+-- Tiempo de generación: 18-07-2023 a las 05:17:04
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.1.17
 
@@ -40,7 +40,6 @@ CREATE TABLE `album` (
 
 INSERT INTO `album` (`id`, `nombre`, `genero`, `id_artista`) VALUES
 (1, 'Abbey Road', 'Rock', 1),
-(2, 'Revolver', 'Rock', 1),
 (3, 'Sgt. Pepper\'s Lonely Hearts Club Band', 'Rock', 1),
 (4, 'Led Zeppelin IV', 'Rock', 2),
 (5, 'Physical Graffiti', 'Rock', 2),
@@ -98,7 +97,8 @@ INSERT INTO `album` (`id`, `nombre`, `genero`, `id_artista`) VALUES
 (63, 'Use Your Illusion II', 'Rock', 19),
 (64, 'Back in Black', 'Rock', 20),
 (65, 'Highway to Heññ', 'Rock', 20),
-(66, 'For Those About to Rock We Salute You', 'Rock', 20);
+(66, 'For Those About to Rock We Salute You', 'Rock', 20),
+(67, 'Beggars Banquet', 'Rock', 4);
 
 -- --------------------------------------------------------
 
@@ -136,7 +136,8 @@ INSERT INTO `artista` (`id`, `nombre`, `genero`) VALUES
 (17, 'Nirvana', 'Rock'),
 (18, 'Queen', 'Rock'),
 (19, 'Guns N\' Roses', 'Rock'),
-(20, 'AC/DC', 'Rock');
+(20, 'AC/DC', 'Rock'),
+(22, 'Rage Against the Machine', 'Rock');
 
 -- --------------------------------------------------------
 
@@ -151,6 +152,14 @@ CREATE TABLE `usuario` (
   `password` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`id`, `nombre`, `email`, `password`) VALUES
+(1, 'manuel', 'manuel90@gmail.com', '123456'),
+(2, 'userDos', 'usuario@usuario.com', '123456');
+
 -- --------------------------------------------------------
 
 --
@@ -163,6 +172,133 @@ CREATE TABLE `valoracion` (
   `id_album` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `valoracion`
+--
+
+INSERT INTO `valoracion` (`id`, `valoracion`, `id_album`, `id_usuario`) VALUES
+(1, 4, 67, 1),
+(3, 5, 1, 1),
+(4, 5, 3, 1),
+(5, 4, 4, 1),
+(6, 2, 5, 1),
+(7, 5, 6, 1),
+(8, 3, 7, 1),
+(9, 5, 8, 1),
+(10, 3, 9, 1),
+(11, 2, 10, 1),
+(12, 1, 11, 1),
+(13, 5, 12, 1),
+(14, 1, 67, 1),
+(15, 3, 13, 1),
+(16, 5, 14, 1),
+(17, 3, 15, 1),
+(18, 5, 16, 1),
+(19, 1, 17, 1),
+(20, 4, 18, 1),
+(21, 4, 19, 1),
+(22, 5, 20, 1),
+(23, 2, 21, 1),
+(24, 1, 22, 1),
+(25, 1, 23, 1),
+(26, 1, 24, 1),
+(27, 3, 25, 1),
+(28, 2, 26, 1),
+(29, 4, 27, 1),
+(30, 3, 28, 1),
+(31, 2, 29, 1),
+(32, 1, 30, 1),
+(33, 3, 31, 1),
+(34, 4, 32, 1),
+(35, 3, 33, 1),
+(36, 3, 37, 1),
+(37, 5, 38, 1),
+(38, 4, 39, 1),
+(39, 1, 40, 1),
+(40, 1, 41, 1),
+(41, 1, 42, 1),
+(42, 2, 43, 1),
+(43, 4, 44, 1),
+(44, 5, 45, 1),
+(45, 5, 46, 1),
+(46, 4, 47, 1),
+(47, 5, 48, 1),
+(48, 1, 52, 1),
+(49, 1, 53, 1),
+(50, 4, 54, 1),
+(51, 2, 55, 1),
+(52, 5, 56, 1),
+(53, 3, 57, 1),
+(54, 3, 58, 1),
+(55, 1, 59, 1),
+(56, 1, 60, 1),
+(57, 2, 61, 1),
+(58, 1, 62, 1),
+(59, 3, 63, 1),
+(60, 2, 64, 1),
+(61, 1, 65, 1),
+(62, 2, 66, 1),
+(66, 1, 1, 2),
+(67, 1, 3, 2),
+(68, 5, 4, 2),
+(69, 2, 5, 2),
+(70, 5, 6, 2),
+(71, 4, 7, 2),
+(72, 4, 8, 2),
+(73, 3, 9, 2),
+(74, 3, 10, 2),
+(75, 2, 11, 2),
+(76, 3, 12, 2),
+(77, 3, 67, 2),
+(78, 5, 13, 2),
+(79, 2, 14, 2),
+(80, 2, 15, 2),
+(81, 5, 16, 2),
+(82, 3, 17, 2),
+(83, 1, 18, 2),
+(84, 3, 19, 2),
+(85, 2, 20, 2),
+(86, 5, 21, 2),
+(87, 2, 22, 2),
+(88, 2, 23, 2),
+(89, 3, 24, 2),
+(90, 4, 25, 2),
+(91, 4, 26, 2),
+(92, 2, 27, 2),
+(93, 2, 28, 2),
+(94, 5, 29, 2),
+(95, 4, 30, 2),
+(96, 3, 31, 2),
+(97, 2, 32, 2),
+(98, 3, 33, 2),
+(99, 3, 37, 2),
+(100, 5, 38, 2),
+(101, 2, 39, 2),
+(102, 1, 40, 2),
+(103, 2, 41, 2),
+(104, 1, 42, 2),
+(105, 3, 43, 2),
+(106, 5, 44, 2),
+(107, 3, 45, 2),
+(108, 2, 46, 2),
+(109, 2, 47, 2),
+(110, 3, 48, 2),
+(111, 5, 52, 2),
+(112, 4, 53, 2),
+(113, 2, 54, 2),
+(114, 4, 55, 2),
+(115, 5, 56, 2),
+(116, 4, 57, 2),
+(117, 2, 58, 2),
+(118, 2, 59, 2),
+(119, 3, 60, 2),
+(120, 3, 61, 2),
+(121, 2, 62, 2),
+(122, 2, 63, 2),
+(123, 1, 64, 2),
+(124, 1, 65, 2),
+(125, 5, 66, 2);
 
 --
 -- Índices para tablas volcadas
@@ -203,25 +339,25 @@ ALTER TABLE `valoracion`
 -- AUTO_INCREMENT de la tabla `album`
 --
 ALTER TABLE `album`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT de la tabla `artista`
 --
 ALTER TABLE `artista`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `valoracion`
 --
 ALTER TABLE `valoracion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
 
 --
 -- Restricciones para tablas volcadas
